@@ -9,8 +9,8 @@ program
   .arguments('<url>')
   .description('use page loader to save web pages locally')
   .option('-o, --output [dir]', 'output dir', '/app')
-  .action((url) => {
-    console.log(pageLoader(url));
+  .action((url, options) => {
+    console.log(pageLoader(url, options.output));
   });
 
 program.parse(process.argv);
