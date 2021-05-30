@@ -1,3 +1,3 @@
-import yo from './src/yo.js';
+import pageLoader from './src/page-loader.js';
 
-export default yo;
+export default pageLoader;
