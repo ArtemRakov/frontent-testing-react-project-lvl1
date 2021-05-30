@@ -6,7 +6,7 @@
     "page-loader": "bin/page-loader.js"
   },
   "scripts": {
-    "test": "jest"
+    "test": "npx jest --bail"
   },
   "repository": {
     "type": "git",
