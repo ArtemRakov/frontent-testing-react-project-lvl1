@@ -5,6 +5,9 @@
   "bin": {
     "page-loader": "bin/page-loader.js"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "test": "npx jest --bail"
   },
@@ -12,8 +15,9 @@
     "type": "git",
     "url": "git+https://github.com/ArtemRakov/frontent-testing-react-project-lvl1.git"
   },
-  "author": "",
+  "author": "Artem Rakov",
   "license": "ISC",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/issues"
   },
@@ -27,12 +31,14 @@
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.4",
+    "@jest/globals": "^27.0.3",
     "babel-jest": "^27.0.2",
     "debug": "^4.3.1",
     "eslint": "^7.27.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jest": "^24.3.6",
-    "jest": "^27.0.3"
+    "jest": "^27.0.3",
+    "jest-cli": "^27.0.3"
   }
 }
