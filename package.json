@@ -1,6 +1,6 @@
 {
   "name": "frontent-testing-react-project-lvl1",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "[![Actions Status](https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/workflows/hexlet-check/badge.svg)](https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/actions)",
   "bin": {
     "page-loader": "bin/page-loader.js"
