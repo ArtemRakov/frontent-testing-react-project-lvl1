@@ -1,9 +1,8 @@
 import _ from 'lodash';
+import axios from 'axios';
 
-const divide = (num) => {
-  const result = num / 2;
-  _.noop();
-  return result;
+const pageLoader = (u) => {
+  const url = new URL(u);
 };
 
-export default divide;
+export default pageLoader;
