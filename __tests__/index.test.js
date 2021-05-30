@@ -30,7 +30,7 @@ afterEach(() => {
 test('loads html', async () => {
   const outputPath = createTempDir();
   const url = 'http://example.com';
-  const outputFilePath = path.join(outputPath, 'example.html');
+  const outputFilePath = path.join(outputPath, 'example.com.html');
   const exampleHtml = readFile('example.html');
 
   nock(url)
@@ -39,6 +39,6 @@ test('loads html', async () => {
 
   await pathLoader(url, outputPath);
 
-  const outputFile = fs.readFileSync(outputFilePath);
+  const outputFile = fs.readFileSync(outputFilePath, 'utf-8');
   expect(outputFile).toEqual(exampleHtml);
 });
