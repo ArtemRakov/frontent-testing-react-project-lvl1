@@ -42,3 +42,7 @@ test('loads html', async () => {
   const outputFile = fs.readFileSync(outputFilePath, 'utf-8');
   expect(outputFile).toEqual(exampleHtml);
 });
+
+test('loads html with assets', async () => {
+
+})
