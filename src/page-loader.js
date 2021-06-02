@@ -3,16 +3,18 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
-const generateFilenameFromUrl = (url) => {
+// remember about path.format
+const filepathFromUrl = (url) => {
   const urlWithoutProtocol = url.hostname + url.pathname;
-  return `${urlWithoutProtocol.replace('/', '')}.html`;
+  const filepath = urlWithoutProtocol.replace(/[^a-zA-Z]/g, '-');
+  return `${filepath}.html`;
 };
 
 const pageLoader = async (u, outputPath) => {
   const url = new URL(u);
   const response = await axios.get(url.href);
 
-  const filename = generateFilenameFromUrl(url);
+  const filename = filepathFromUrl(url);
 
   fs.writeFileSync(path.join(outputPath, filename), response.data);
 };

@@ -29,15 +29,15 @@ afterEach(() => {
 
 test('loads html', async () => {
   const outputPath = createTempDir();
-  const url = 'http://example.com';
-  const outputFilePath = path.join(outputPath, 'example.com.html');
-  const exampleHtml = readFile('example.html');
+  const url = new URL('http://example.com/test');
+  const outputFilePath = path.join(outputPath, 'example-com-test.html');
+  const exampleHtml = readFile('example-com-test.html');
 
-  nock(url)
-    .get('/')
+  nock(url.origin)
+    .get(url.pathname)
     .reply(200, exampleHtml);
 
-  await pathLoader(url, outputPath);
+  await pathLoader(url.href, outputPath);
 
   const outputFile = fs.readFileSync(outputFilePath, 'utf-8');
   expect(outputFile).toEqual(exampleHtml);
