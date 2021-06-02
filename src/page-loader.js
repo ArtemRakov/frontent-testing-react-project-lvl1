@@ -6,7 +6,7 @@ import path from 'path';
 // remember about path.format
 const filepathFromUrl = (url) => {
   const urlWithoutProtocol = url.hostname + url.pathname;
-  const filepath = urlWithoutProtocol.replace(/[^a-zA-Z]/g, '-');
+  const filepath = urlWithoutProtocol.replace(/[^a-zA-Z0-9]/g, '-');
   return `${filepath}.html`;
 };
 
