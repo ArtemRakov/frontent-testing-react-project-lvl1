@@ -1,4 +1,3 @@
-// import _ from 'lodash';
 import path from 'path';
 
 const generateFilepath = (str, ext = '') => str.replace(/[^a-zA-Z0-9]/g, '-') + ext;
