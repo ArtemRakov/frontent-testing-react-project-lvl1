@@ -23,7 +23,7 @@ const loadFiles = async (state, outputDir, $) => {
 
     const creationPromises = state.assets.map((asset) => {
       const data = assetFiles.find((file) => file.responseUrl === asset.originSrc);
-      return fsPromises.writeFile(getFilePath(asset.newSrc), data);
+      return fsPromises.writeFile(getFilePath(asset.newSrc), data, 'null');
     });
 
     await Promise.all(creationPromises);
