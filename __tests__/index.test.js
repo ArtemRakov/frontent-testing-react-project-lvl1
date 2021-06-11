@@ -86,7 +86,8 @@ test('loads html with assets', async () => {
   const outputImg = fs.readFileSync(outputFilePath(filePaths.assets.img), 'utf-8');
 
   const expectedHtml = readFile(filePaths.expectedHtml);
+  const expectedImg = readFile(path.join('result', filePaths.assets.img));
 
-  // expect(outputFile).toEqual(expectedHtml);
-  expect(() => fs.statSync(outputImg)).not.toThrowError();
+  expect(outputFile).toEqual(expectedHtml);
+  expect(outputImg).toEqual(expectedImg);
 });
