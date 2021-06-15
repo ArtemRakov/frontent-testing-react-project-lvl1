@@ -11,6 +11,7 @@ const __dirname = path.dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
+const readResultFile = (filename) => readFile(path.join('result', filename));
 
 const createTempDir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'path-loader-'));
 
@@ -47,7 +48,6 @@ test('loads html with assets', async () => {
   const outputFilePath = (filepath) => path.join(outputDir, filepath);
   const filePaths = {
     initialHtml: 'initial/ru-hexlet-io-courses.html',
-    expectedHtml: 'result/ru-hexlet-io-courses.html',
     html: 'ru-hexlet-io-courses.html',
     assets: {
       img: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png',
@@ -58,7 +58,8 @@ test('loads html with assets', async () => {
   };
 
   const initialHtml = readFile(filePaths.initialHtml);
-  const [image, css, js, html] = Object.values(filePaths.assets).map((assetPath) => readFile((path.join('result', assetPath))));
+  const [image, css, js, html] = Object.values(filePaths.assets)
+    .map((assetPath) => readResultFile(assetPath));
 
   nock(url.origin)
     .get(url.pathname)
@@ -82,11 +83,12 @@ test('loads html with assets', async () => {
 
   await pathLoader(url.href, outputDir);
 
+  // map them over each other
   const outputFile = fs.readFileSync(outputFilePath(filePaths.html), 'utf-8');
   const outputImg = fs.readFileSync(outputFilePath(filePaths.assets.img), 'utf-8');
 
-  const expectedHtml = readFile(filePaths.expectedHtml);
-  const expectedImg = readFile(path.join('result', filePaths.assets.img));
+  const expectedHtml = readResultFile(filePaths.html);
+  const expectedImg = readResultFile(filePaths.assets.img);
 
   expect(outputFile).toEqual(expectedHtml);
   expect(outputImg).toEqual(expectedImg);

@@ -9,6 +9,9 @@ install-deps:
 test:
 	npm test
 
+test_with_lgos:
+	DEBUG=axios,page-loader,nock.request_overrider npm test
+
 test-coverage:
 	npm test -- --coverage --coverageProvider=v8
 

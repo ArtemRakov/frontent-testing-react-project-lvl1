@@ -2,16 +2,19 @@ import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
 import axios from 'axios';
+import 'axios-debug-log';
 
 const extractAssets = async (sources) => {
-  const assetsPromises = sources.map(({ originSrc, responseType }) => (
-    axios.get(originSrc, { responseType })
-  ));
+  const assetsPromises = sources.map(({ originSrc, responseType }) => {
+    const request = axios.get(originSrc, { responseType });
+
+    return request;
+  });
   const assetsResponses = await Promise.all(assetsPromises);
   return assetsResponses;
 };
 
-const loadFiles = async (state, outputDir, $) => {
+const createFiles = async (state, outputDir, $) => {
   const getFilePath = (filepath) => path.join(outputDir, filepath);
 
   if (state.assets.length > 0) {
@@ -34,4 +37,4 @@ const loadFiles = async (state, outputDir, $) => {
   fs.writeFileSync(getFilePath(state.htmlName), $.html());
 };
 
-export default loadFiles;
+export default createFiles;
