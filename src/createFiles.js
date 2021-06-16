@@ -12,11 +12,12 @@ const createFiles = async (state, outputDir, $) => {
       tag.attr(asset.attr, asset.src.new);
     });
 
-    fs.mkdirSync(path.join(outputDir, state.assetsDir));
+    fs.mkdirSync(getFilePath(state.assetsDir));
     const assetsResponses = await loadAssets(state.assets, state.origin);
 
     const creationPromises = state.assets.map((asset) => {
       const response = assetsResponses.find((res) => res.config.url === asset.src.origin);
+      console.log(response.data);
       return fsPromises.writeFile(getFilePath(asset.src.new), response.data);
     });
 

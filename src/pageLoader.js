@@ -10,7 +10,7 @@ const log = debug('page-loader');
 
 const pageLoader = async (u, outputDir) => {
   const url = new URL(u);
-  log('Fetch url');
+  log('Fetch url', url);
   const response = await axios.get(url.href);
   const html = response.data;
 
@@ -22,8 +22,9 @@ const pageLoader = async (u, outputDir) => {
 
   log('Build state');
   const state = buildState(url, htmlAssets);
+  log('State', state);
 
-  log('Create files');
+  log('Create files here:', outputDir);
   await createFiles(state, outputDir, $);
 };
 
