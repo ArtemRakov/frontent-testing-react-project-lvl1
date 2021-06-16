@@ -39,7 +39,7 @@ const buildState = (url, assetSources) => {
     origin,
     assets,
     assetsDir,
-    htmlName: generateFilepath(root, '.html'),
+    html: generateFilepath(root, '.html'),
   };
 };
 

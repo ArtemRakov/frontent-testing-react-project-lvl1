@@ -17,14 +17,13 @@ const createFiles = async (state, outputDir, $) => {
 
     const creationPromises = state.assets.map((asset) => {
       const response = assetsResponses.find((res) => res.config.url === asset.src.origin);
-      console.log(response.data);
       return fsPromises.writeFile(getFilePath(asset.src.new), response.data);
     });
 
     await Promise.all(creationPromises);
   }
 
-  fs.writeFileSync(getFilePath(state.htmlName), $.html());
+  fs.writeFileSync(getFilePath(state.html), $.html());
 };
 
 export default createFiles;
