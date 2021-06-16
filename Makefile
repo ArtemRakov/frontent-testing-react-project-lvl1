@@ -9,7 +9,7 @@ install-deps:
 test:
 	npm test
 
-test_with_lgos:
+test-with-logs:
 	DEBUG=axios,page-loader,nock.request_overrider npm test
 
 test-coverage:

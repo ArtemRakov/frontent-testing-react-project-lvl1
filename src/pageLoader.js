@@ -3,7 +3,7 @@ import cheerio from 'cheerio';
 import debug from 'debug';
 
 import buildState from './state.js';
-import findAssets from './assets.js';
+import { extractAssetsFromHtml } from './assets.js';
 import createFiles from './createFiles.js';
 
 const log = debug('page-loader');
@@ -18,10 +18,10 @@ const pageLoader = async (u, outputDir) => {
   const $ = cheerio.load(html);
 
   log('Extract assets sources from html');
-  const assetSources = findAssets($);
+  const htmlAssets = extractAssetsFromHtml($);
 
   log('Build state');
-  const state = buildState(url, assetSources);
+  const state = buildState(url, htmlAssets);
 
   log('Create files');
   await createFiles(state, outputDir, $);

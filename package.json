@@ -1,5 +1,5 @@
 {
-  "name": "frontent-testing-react-project-lvl1",
+  "name": "@hexlet/code",
   "version": "0.0.1",
   "description": "[![Actions Status](https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/workflows/hexlet-check/badge.svg)](https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/actions)",
   "bin": {
