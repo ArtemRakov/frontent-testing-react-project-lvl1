@@ -2,3 +2,6 @@
 [![Actions Status](https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/workflows/hexlet-check/badge.svg)](https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9b5e7f65cd8973de6cc1/maintainability)](https://codeclimate.com/github/ArtemRakov/frontent-testing-react-project-lvl1/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9b5e7f65cd8973de6cc1/test_coverage)](https://codeclimate.com/github/ArtemRakov/frontent-testing-react-project-lvl1/test_coverage)
+
+### Example with logs
+[![demo](https://asciinema.org/a/fJjw8RDF5UIYwlKZ00JzqxTZp.svg)](https://asciinema.org/a/fJjw8RDF5UIYwlKZ00JzqxTZp)
