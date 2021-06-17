@@ -10,7 +10,8 @@ program
   .description('use page loader to save web pages locally')
   .option('-o, --output [dir]', 'output dir', process.cwd())
   .action((url, options) => {
-    console.log(pageLoader(url, options.output));
+    process.stdout(pageLoader(url, options.output));
+    process.exit();
   });
 
 program.parse(process.argv);
