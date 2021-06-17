@@ -8,7 +8,7 @@ import createFiles from './createFiles.js';
 
 const log = debug('page-loader');
 
-const pageLoader = async (u, outputDir) => {
+const pageLoader = async (u, outputDir = process.cwd()) => {
   const url = new URL(u);
   log('Fetch url', url);
   const response = await axios.get(url.href);
@@ -21,11 +21,13 @@ const pageLoader = async (u, outputDir) => {
   const htmlAssets = extractAssetsFromHtml($);
 
   log('Build state');
-  const state = buildState(url, htmlAssets);
+  const state = buildState(url, htmlAssets, outputDir);
   log('State', state);
 
   log('Create files here:', outputDir);
-  await createFiles(state, outputDir, $);
+  await createFiles(state, $);
+
+  return { filepath: state.htmlFilepath };
 };
 
 export default pageLoader;
