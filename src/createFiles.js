@@ -17,7 +17,16 @@ const createFiles = async (state, outputDir, $) => {
 
     const creationPromises = state.assets.map((asset) => {
       const response = assetsResponses.find((res) => res.config.url === asset.src.origin);
-      return fsPromises.writeFile(getFilePath(asset.src.new), response.data);
+      const input = response.data;
+      const output = fs.createWriteStream(getFilePath(asset.src.new), { flags: 'w+' });
+
+      return new Promise((resolve, reject) => {
+        output.on('error', reject);
+        input.on('error', reject);
+        input.on('end', resolve);
+
+        input.pipe(output);
+      });
     });
 
     await Promise.all(creationPromises);

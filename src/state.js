@@ -18,7 +18,7 @@ const generateAsset = (url, assetsDir, { tag, src, attr }) => {
       old: src,
       new: newSrc,
     },
-    responseType: tag === 'img' ? 'stream' : 'json',
+    responseType: 'stream',
     tag,
     attr,
   };
