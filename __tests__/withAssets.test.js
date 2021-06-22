@@ -54,12 +54,13 @@ test('loads html with assets', async () => {
 
   const expectedHtml = readFile(path.join('expected', htmlName));
   const outputHtml = fs.readFileSync(outputFilePath(htmlName), 'utf-8');
-  expect(expectedHtml).toEqual(outputHtml);
+  expect(outputHtml).toEqual(expectedHtml);
 
   assets.forEach((asset) => {
+    console.log(path.join('expected', asset.path));
     const expected = readFile(path.join('expected', asset.path), 'utf-8');
     const output = fs.readFileSync(outputFilePath(asset.path), 'utf-8');
-    expect(expected).toEqual(output);
+    expect(output).toEqual(expected);
   });
 });
 
