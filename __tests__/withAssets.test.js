@@ -9,9 +9,8 @@ import pathLoader from '../index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 'with_assets', filename);
+const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
-const readResultFile = (filename) => readFile(path.join('result', filename));
 
 const createTempDir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'path-loader-'));
 
@@ -28,53 +27,38 @@ afterEach(() => {
   nock.enableNetConnect();
 });
 
+const assets = [
+  { url: '/assets/professions/nodejs.png', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png', ttype: 'image/png' },
+  { url: '/assets/application.css', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css', type: 'text/css' },
+  { url: '/packs/js/runtime.js', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js', type: 'application/javascript' },
+  { url: '/courses', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html', type: 'text/html' },
+];
+
 test('loads html with assets', async () => {
   const url = new URL('https://ru.hexlet.io/courses');
+  const htmlName = 'ru-hexlet-io-courses.html';
   const outputFilePath = (filepath) => path.join(outputDir, filepath);
-  const filePaths = {
-    initialHtml: 'initial/ru-hexlet-io-courses.html',
-    html: 'ru-hexlet-io-courses.html',
-    assets: {
-      img: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png',
-      css: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css',
-      js: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js',
-      html: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html',
-    },
-  };
-
-  const initialHtml = readFile(filePaths.initialHtml);
-  const [image, css, js, html] = Object.values(filePaths.assets)
-    .map((assetPath) => readResultFile(assetPath));
+  const initialHtml = readFile(htmlName);
 
   nock(url.origin)
     .get(url.pathname)
     .reply(200, initialHtml);
 
-  nock(url.origin)
-    .get('/assets/professions/nodejs.png')
-    .reply(200, image);
-
-  nock(url.origin)
-    .get('/assets/application.css')
-    .reply(200, css);
-
-  nock(url.origin)
-    .get('/packs/js/runtime.js')
-    .reply(200, js);
-
-  nock(url.origin)
-    .get('/courses')
-    .reply(200, html);
+  assets.forEach((asset) => {
+    nock(url.origin)
+      .get(asset.url)
+      .replyWithFile(200, getFixturePath(`expected/${asset.path}`));
+  });
 
   await pathLoader(url.href, outputDir);
 
-  // map them over each other
-  const outputFile = fs.readFileSync(outputFilePath(filePaths.html), 'utf-8');
-  const outputImg = fs.readFileSync(outputFilePath(filePaths.assets.img), 'utf-8');
+  const expectedHtml = readFile(`expected/${htmlName}`);
+  const outputHtml = fs.readFileSync(outputFilePath(htmlName), 'utf-8');
+  expect(expectedHtml).toEqual(outputHtml);
 
-  const expectedHtml = readResultFile(filePaths.html);
-  const expectedImg = readResultFile(filePaths.assets.img);
-
-  expect(outputFile).toEqual(expectedHtml);
-  expect(outputImg).toEqual(expectedImg);
+  assets.forEach((asset) => {
+    const expected = readFile(`expected/${asset.path}`, 'utf-8');
+    const output = fs.readFileSync(outputFilePath(asset.path), 'utf-8');
+    expect(expected).toEqual(output);
+  });
 });

@@ -22,4 +22,13 @@ const loadAssets = async (sources) => {
   return assetsResponses;
 };
 
-export { extractAssetsFromHtml, loadAssets };
+const updateAssetsHtml = (state, $) => {
+  state.assets.forEach((asset) => {
+    const tag = $(`${asset.tag}[${asset.attr}='${asset.src.old}']`);
+    tag.attr(asset.attr, asset.src.new);
+  });
+
+  return $.html();
+};
+
+export { extractAssetsFromHtml, loadAssets, updateAssetsHtml };

@@ -1,14 +1,8 @@
 import fs from 'fs';
 import { loadAssets } from './assets.js';
 
-const createFiles = async (state, $) => {
+const createFiles = async (state, html) => {
   if (state.assets.length > 0) {
-    // мб вынести в отдельную штуку
-    state.assets.forEach((asset) => {
-      const tag = $(`${asset.tag}[${asset.attr}='${asset.src.old}']`);
-      tag.attr(asset.attr, asset.src.new);
-    });
-
     fs.mkdirSync(state.assetsDirPath);
     const assetsResponses = await loadAssets(state.assets, state.origin);
 
@@ -29,7 +23,7 @@ const createFiles = async (state, $) => {
     await Promise.all(creationPromises);
   }
 
-  fs.writeFileSync(state.htmlFilepath, $.html());
+  fs.writeFileSync(state.htmlFilepath, html);
 };
 
 export default createFiles;
