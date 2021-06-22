@@ -67,6 +67,6 @@ test('loads html with assets', async () => {
   });
 });
 
-// test('throws error when url not avaliable', async () => {
+test('throws error when url not avaliable', async () => {
 
-// });
+});
