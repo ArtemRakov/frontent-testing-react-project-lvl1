@@ -52,12 +52,12 @@ test('loads html with assets', async () => {
 
   await pathLoader(url.href, outputDir);
 
-  const expectedHtml = readFile(`expected/${htmlName}`);
+  const expectedHtml = readFile(path.join(expected, htmlName));
   const outputHtml = fs.readFileSync(outputFilePath(htmlName), 'utf-8');
   expect(expectedHtml).toEqual(outputHtml);
 
   assets.forEach((asset) => {
-    const expected = readFile(`expected/${asset.path}`, 'utf-8');
+    const expected = readFile(path.join(expected, asset.path), 'utf-8');
     const output = fs.readFileSync(outputFilePath(asset.path), 'utf-8');
     expect(expected).toEqual(output);
   });
