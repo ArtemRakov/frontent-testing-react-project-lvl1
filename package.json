@@ -17,7 +17,6 @@
   },
   "author": "Artem Rakov",
   "license": "ISC",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/issues"
   },
