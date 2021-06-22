@@ -19,6 +19,7 @@ let outputDir;
 beforeEach(() => {
   outputDir = createTempDir();
   nock.disableNetConnect();
+  nock.enableNetConnect('127.0.0.1');
 });
 
 afterEach(() => {
