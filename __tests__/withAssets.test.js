@@ -42,7 +42,6 @@ afterEach(() => {
   nock.enableNetConnect();
 });
 
-
 test('loads html with assets', async () => {
   nock(url.origin)
     .get(url.pathname)
@@ -65,8 +64,4 @@ test('loads html with assets', async () => {
     const output = fs.readFileSync(outputFilePath(asset.path), 'utf-8');
     expect(output).toEqual(expected);
   });
-});
-
-test('throws error when url not avaliable', async () => {
-
 });
