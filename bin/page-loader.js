@@ -9,9 +9,9 @@ program
   .arguments('<url>')
   .description('use page loader to save web pages locally')
   .option('-o, --output [dir]', 'output dir', process.cwd())
-  .action((url, options) => {
+  .action(async (url, options) => {
     try {
-      console.log(pageLoader(url, options.output));
+      console.log(await pageLoader(url, options.output));
     } catch {
       process.exit(1);
     }

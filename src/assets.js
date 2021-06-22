@@ -9,7 +9,8 @@ const tags = {
 
 const extractAssetsFromHtml = ($) => Object.keys(tags).map((tag) => {
   const attr = tags[tag];
-  return $(tag).map((_, el) => ({ tag, attr, src: $(el).attr(attr) })).toArray();
+  const tagsWithAttr = $(tag).toArray().filter((el) => $(el).attr(attr));
+  return tagsWithAttr.map((el) => ({ tag, attr, src: $(el).attr(attr) }));
 }).flat();
 
 const loadAssets = async (sources) => {

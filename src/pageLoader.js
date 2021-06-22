@@ -24,7 +24,6 @@ const pageLoader = async (u, outputDir = process.cwd()) => {
   log('State', state);
 
   const resultHtml = updateAssetsHtml(state, $);
-  log('Updated html:', resultHtml);
 
   log('Create files inside:', outputDir);
   await createFiles(state, resultHtml);
