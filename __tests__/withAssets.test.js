@@ -15,9 +15,19 @@ const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8'
 const createTempDir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'path-loader-'));
 
 let outputDir;
+let url;
+let htmlName;
+let outputFilePath;
+let initialHtml;
 
 beforeEach(() => {
   outputDir = createTempDir();
+
+  url = new URL('https://ru.hexlet.io/courses');
+  htmlName = 'ru-hexlet-io-courses.html';
+  outputFilePath = (filepath) => path.join(outputDir, filepath);
+  initialHtml = readFile(htmlName);
+
   nock.disableNetConnect();
 });
 
@@ -28,18 +38,13 @@ afterEach(() => {
 });
 
 const assets = [
-  { url: '/assets/professions/nodejs.png', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png', ttype: 'image/png' },
-  { url: '/assets/application.css', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css', type: 'text/css' },
-  { url: '/packs/js/runtime.js', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js', type: 'application/javascript' },
-  { url: '/courses', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html', type: 'text/html' },
+  { url: '/assets/professions/nodejs.png', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png' },
+  { url: '/assets/application.css', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css' },
+  { url: '/packs/js/runtime.js', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js' },
+  { url: '/courses', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html' },
 ];
 
 test('loads html with assets', async () => {
-  const url = new URL('https://ru.hexlet.io/courses');
-  const htmlName = 'ru-hexlet-io-courses.html';
-  const outputFilePath = (filepath) => path.join(outputDir, filepath);
-  const initialHtml = readFile(htmlName);
-
   nock(url.origin)
     .get(url.pathname)
     .reply(200, initialHtml);
@@ -62,3 +67,7 @@ test('loads html with assets', async () => {
     expect(expected).toEqual(output);
   });
 });
+
+// test('throws error when url not avaliable', async () => {
+
+// });

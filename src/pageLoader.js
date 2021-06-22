@@ -29,7 +29,7 @@ const pageLoader = async (u, outputDir = process.cwd()) => {
   log('Create files inside:', outputDir);
   await createFiles(state, resultHtml);
 
-  return { filepath: state.htmlFilepath };
+  return Promise.resolve({ filepath: state.htmlFilepath });
 };
 
 export default pageLoader;
