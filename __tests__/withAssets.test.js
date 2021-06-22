@@ -14,14 +14,20 @@ let url;
 let htmlName;
 let outputFilePath;
 let initialHtml;
+let assets;
 
 beforeEach(() => {
   outputDir = createTempDir();
-
   url = new URL('https://ru.hexlet.io/courses');
   htmlName = 'ru-hexlet-io-courses.html';
   outputFilePath = (filepath) => path.join(outputDir, filepath);
   initialHtml = readFile(htmlName);
+  assets = [
+    { url: '/assets/professions/nodejs.png', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png' },
+    { url: '/assets/application.css', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css' },
+    { url: '/packs/js/runtime.js', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js' },
+    { url: '/courses', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html' },
+  ];
 
   nock.disableNetConnect();
 });
@@ -32,14 +38,8 @@ afterEach(() => {
   nock.enableNetConnect();
 });
 
-test('loads html with assets', async () => {
-  const assets = [
-    { url: '/assets/professions/nodejs.png', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png' },
-    { url: '/assets/application.css', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css' },
-    { url: '/packs/js/runtime.js', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js' },
-    { url: '/courses', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html' },
-  ];
 
+test('loads html with assets', async () => {
   nock(url.origin)
     .get(url.pathname)
     .reply(200, initialHtml);
@@ -57,7 +57,6 @@ test('loads html with assets', async () => {
   expect(outputHtml).toEqual(expectedHtml);
 
   assets.forEach((asset) => {
-    console.log(path.join('expected', asset.path));
     const expected = readFile(path.join('expected', asset.path), 'utf-8');
     const output = fs.readFileSync(outputFilePath(asset.path), 'utf-8');
     expect(output).toEqual(expected);
