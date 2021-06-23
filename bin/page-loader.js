@@ -16,10 +16,10 @@ program
       console.log(`Page was successfully downloaded into ${path.join(options.output, info.filepath)}`);
       process.exit();
     } catch (e) {
-      if (e.isAxiosError) {
-        console.error(e);
-      } else {
-      }
+      // if (e.isAxiosError) {
+      //   console.error(e);
+      // } else {
+      // }
 
       process.exit(1);
     }
