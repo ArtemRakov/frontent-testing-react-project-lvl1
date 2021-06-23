@@ -31,7 +31,7 @@ const generateAsset = (url, assetsDir, outputDir, { tag, src, attr }) => {
 
 const buildState = (url, assetSources, outputDir) => {
   const { origin, hostname, pathname } = url;
-  const root = generateFilepath(hostname + pathname);
+  const root = pathname === '/' ? generateFilepath(hostname) : generateFilepath(hostname + pathname);
   const assetsDir = `${root}_files`;
 
   const filteredAssets = assetSources.filter(({ src }) => (
