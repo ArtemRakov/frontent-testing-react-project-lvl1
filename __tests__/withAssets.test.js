@@ -60,7 +60,7 @@ test('loads html with assets', async () => {
   expect(outputHtml).toEqual(expectedHtml);
 
   assets.forEach((asset) => {
-    const expected = readFile(path.join('expected', asset.path), 'utf-8');
+    const expected = readFile(path.join('expected', asset.path));
     const output = fs.readFileSync(outputFilePath(asset.path), 'utf-8');
     expect(output).toEqual(expected);
   });

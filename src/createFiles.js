@@ -9,14 +9,13 @@ const createFiles = async (state, html) => {
     const creationPromises = state.assets.map((asset) => {
       const response = assetsResponses.find((res) => res.config.url === asset.src.origin);
       const input = response.data;
-      const output = fs.createWriteStream(asset.filepath, { flags: 'w+' });
+      const writer = fs.createWriteStream(asset.filepath, { flags: 'w+' });
+
+      input.pipe(writer);
 
       return new Promise((resolve, reject) => {
-        output.on('error', reject);
-        input.on('error', reject);
-        input.on('end', resolve);
-
-        input.pipe(output);
+        writer.on('error', reject);
+        writer.on('finish', resolve);
       });
     });
 
