@@ -28,7 +28,7 @@ const loadAssets = async (sources) => {
   }
 };
 
-const updateAssetsHtml = (state, $) => {
+const updateHtmlAssets = (state, $) => {
   state.assets.forEach((asset) => {
     const tag = $(`${asset.tag}[${asset.attr}='${asset.src.old}']`);
     tag.attr(asset.attr, asset.src.new);
@@ -37,4 +37,4 @@ const updateAssetsHtml = (state, $) => {
   return $.html();
 };
 
-export { extractAssetsFromHtml, loadAssets, updateAssetsHtml };
+export { extractAssetsFromHtml, loadAssets, updateHtmlAssets };

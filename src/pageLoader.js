@@ -3,7 +3,7 @@ import cheerio from 'cheerio';
 import debug from 'debug';
 
 import buildState from './state.js';
-import { extractAssetsFromHtml, updateAssetsHtml } from './assets.js';
+import { extractAssetsFromHtml, updateHtmlAssets } from './assets.js';
 import createFiles from './createFiles.js';
 
 const log = debug('page-loader');
@@ -18,11 +18,7 @@ const getPageData = async (url) => {
   }
 };
 
-const pageLoader = async (u, outputDir) => {
-  if (!outputDir) {
-    throw new Error('Output directory does not exists');
-  }
-
+const pageLoader = async (u, outputDir = process.cwd()) => {
   const url = new URL(u);
   const html = await getPageData(url);
   const $ = cheerio.load(html);
@@ -33,7 +29,7 @@ const pageLoader = async (u, outputDir) => {
   const state = buildState(url, htmlAssets, outputDir);
   log('State', state);
 
-  const resultHtml = updateAssetsHtml(state, $);
+  const resultHtml = updateHtmlAssets(state, $);
 
   log('Create files inside:', outputDir);
   await createFiles(state, resultHtml);
