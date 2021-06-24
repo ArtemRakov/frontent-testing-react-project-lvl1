@@ -18,7 +18,7 @@ const getPageData = async (url) => {
   }
 };
 
-const pageLoader = async (u, outputDir = process.cwd()) => {
+const pageLoader = async (u, outputDir) => {
   const url = new URL(u);
   const html = await getPageData(url);
   const $ = cheerio.load(html);
