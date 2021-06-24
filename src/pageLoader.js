@@ -19,6 +19,10 @@ const getPageData = async (url) => {
 };
 
 const pageLoader = async (u, outputDir) => {
+  if (!outputDir) {
+    throw new Error('Output directory does not exists');
+  }
+
   const url = new URL(u);
   const html = await getPageData(url);
   const $ = cheerio.load(html);
