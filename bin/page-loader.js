@@ -13,7 +13,7 @@ program
   .action(async (url, options) => {
     try {
       const info = await pageLoader(url, options.output);
-      console.log(`Page was successfully downloaded into ${path.join(options.output, info.filepath)}`);
+      console.log(`Page was successfully downloaded into ${path.join(info.filepath)}`);
       process.exit();
     } catch (e) {
       console.error(e);

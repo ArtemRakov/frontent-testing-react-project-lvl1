@@ -9,7 +9,7 @@ const createFiles = async (state, html) => {
     const creationPromises = state.assets.map((asset) => {
       const response = assetsResponses.find((res) => res.config.url === asset.src.origin);
       const input = response.data;
-      const writer = fs.createWriteStream(asset.filepath, { flags: 'wx+' });
+      const writer = fs.createWriteStream(asset.filepath, { flags: 'wx' });
 
       input.pipe(writer);
 
