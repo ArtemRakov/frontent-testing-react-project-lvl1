@@ -19,11 +19,7 @@ const createFiles = async (state, html) => {
       });
     });
 
-    try {
-      await Promise.all(creationPromises);
-    } catch (e) {
-      throw new Error(e.message);
-    }
+    await Promise.all(creationPromises);
   }
 
   fs.writeFileSync(state.htmlFilepath, html, { flag: 'wx' });

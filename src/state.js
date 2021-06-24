@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import path from 'path';
 import debug from 'debug';
 
@@ -34,7 +35,8 @@ const buildState = (url, assetSources, outputDir) => {
   const root = pathname === '/' ? generateFilepath(hostname) : generateFilepath(hostname + pathname);
   const assetsDir = `${root}_files`;
 
-  const filteredAssets = assetSources.filter(({ src }) => (
+  const uniqueAssets = _.uniq(assetSources);
+  const filteredAssets = uniqueAssets.filter(({ src }) => (
     new URL(src, url.origin).origin === url.origin
   ));
 
