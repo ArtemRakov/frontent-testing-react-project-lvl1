@@ -10,12 +10,13 @@ const log = debug('page-loader');
 
 const getPageData = async (url) => {
   log('Fetch url', url);
-  try {
-    const response = await axios.get(url.href);
-    return response.data;
-  } catch (e) {
-    throw new Error([e.message, `URL: ${e.config.url}`].join(' '));
+  const response = await axios.get(url.href);
+
+  if (!response.headers['content-type'].includes('text/html')) {
+    throw new Error(`We expect html page not ${response.headers['content-type']}`);
   }
+
+  return response.data;
 };
 
 const pageLoader = async (u, outputDir = process.cwd()) => {
