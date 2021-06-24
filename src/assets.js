@@ -14,12 +14,13 @@ const extractAssetsFromHtml = ($) => Object.keys(tags).map((tag) => {
 }).flat();
 
 const loadAssets = async (sources) => {
-  try {
-    const assetsPromises = sources.map(({ src }) => {
-      const request = axios.get(src.origin, { responseType: 'stream' });
+  const assetsPromises = sources.map(({ src }) => {
+    const request = axios.get(src.origin, { responseType: 'stream' });
 
-      return request;
-    });
+    return request;
+  });
+
+  try {
     const assetsResponses = await Promise.all(assetsPromises);
     return assetsResponses;
   } catch (e) {

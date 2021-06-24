@@ -9,7 +9,7 @@ const createFiles = async (state, html) => {
     const creationPromises = state.assets.map((asset) => {
       const response = assetsResponses.find((res) => res.config.url === asset.src.origin);
       const input = response.data;
-      const writer = fs.createWriteStream(asset.filepath, { flags: 'w+' });
+      const writer = fs.createWriteStream(asset.filepath, { flags: 'wx+' });
 
       input.pipe(writer);
 
@@ -19,10 +19,14 @@ const createFiles = async (state, html) => {
       });
     });
 
-    await Promise.all(creationPromises);
+    try {
+      await Promise.all(creationPromises);
+    } catch (e) {
+      throw new Error(e.message);
+    }
   }
 
-  fs.writeFileSync(state.htmlFilepath, html);
+  fs.writeFileSync(state.htmlFilepath, html, { flag: 'wx' });
 };
 
 export default createFiles;

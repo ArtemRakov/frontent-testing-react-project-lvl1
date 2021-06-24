@@ -40,3 +40,17 @@ test('loads html', async () => {
   const outputFile = fs.readFileSync(outputFilePath, 'utf-8');
   expect(outputFile).toEqual(exampleHtml);
 });
+
+test('file already exists', async () => {
+  const url = new URL('http://example.com/test');
+  const outputFilePath = path.join(outputDir, 'example-com-test.html');
+  const exampleHtml = readFile('example-com-test.html');
+
+  nock(url.origin)
+    .get(url.pathname)
+    .reply(200, exampleHtml);
+
+  fs.writeFileSync(outputFilePath, '');
+
+  await expect(pathLoader(url.href, outputDir)).rejects.toThrow('file already exists');
+});

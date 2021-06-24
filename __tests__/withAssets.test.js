@@ -70,6 +70,10 @@ describe('positive', () => {
 });
 
 describe('negative', () => {
+  test('basic error', async () => {
+    await expect(pathLoader('', outputDir)).rejects.toThrow();
+  });
+
   test('unable to fetch url', async () => {
     nock(url.origin)
       .get(url.pathname)
