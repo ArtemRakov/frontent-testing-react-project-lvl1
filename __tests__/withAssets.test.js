@@ -42,26 +42,54 @@ afterEach(() => {
   nock.enableNetConnect();
 });
 
-test('loads html with assets', async () => {
-  nock(url.origin)
-    .get(url.pathname)
-    .reply(200, initialHtml);
-
-  assets.forEach((asset) => {
+describe('positive', () => {
+  test('loads html with assets', async () => {
     nock(url.origin)
-      .get(asset.url)
-      .replyWithFile(200, getFixturePath(`expected/${asset.path}`));
+      .get(url.pathname)
+      .reply(200, initialHtml);
+
+    assets.forEach((asset) => {
+      nock(url.origin)
+        .get(asset.url)
+        .replyWithFile(200, getFixturePath(`expected/${asset.path}`));
+    });
+
+    await pathLoader(url.href, outputDir);
+
+    const expectedHtml = readFile(`expected/${htmlName}`);
+    const outputHtml = fs.readFileSync(outputFilePath(htmlName), 'utf-8');
+    expect(outputHtml).toEqual(expectedHtml);
+
+    // maybe move this to test.each?
+    assets.forEach((asset) => {
+      const expected = readFile(`expected/${asset.path}`);
+      const output = fs.readFileSync(outputFilePath(asset.path), 'utf-8');
+      expect(output).toEqual(expected);
+    });
+  });
+});
+
+describe('negative', () => {
+  test('unable to fetch url', async () => {
+    nock(url.origin)
+      .get(url.pathname)
+      .reply(404);
+
+    await expect(pathLoader(url.href, outputDir)).rejects.toThrow(url.href);
   });
 
-  await pathLoader(url.href, outputDir);
+  test('unable to fetch assets', async () => {
+    nock(url.origin)
+      .get(url.pathname)
+      .reply(200, initialHtml);
 
-  const expectedHtml = readFile(path.join('expected', htmlName));
-  const outputHtml = fs.readFileSync(outputFilePath(htmlName), 'utf-8');
-  expect(outputHtml).toEqual(expectedHtml);
+    assets.forEach((asset) => {
+      nock(url.origin)
+        .get(asset.url)
+        .reply(500);
+    });
 
-  assets.forEach((asset) => {
-    const expected = readFile(path.join('expected', asset.path));
-    const output = fs.readFileSync(outputFilePath(asset.path), 'utf-8');
-    expect(output).toEqual(expected);
+    // not sure how to do this better
+    await expect(pathLoader(url.href, outputDir)).rejects.toThrow();
   });
 });

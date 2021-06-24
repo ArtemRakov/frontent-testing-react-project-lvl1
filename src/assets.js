@@ -14,13 +14,17 @@ const extractAssetsFromHtml = ($) => Object.keys(tags).map((tag) => {
 }).flat();
 
 const loadAssets = async (sources) => {
-  const assetsPromises = sources.map(({ src }) => {
-    const request = axios.get(src.origin, { responseType: 'stream' });
+  try {
+    const assetsPromises = sources.map(({ src }) => {
+      const request = axios.get(src.origin, { responseType: 'stream' });
 
-    return request;
-  });
-  const assetsResponses = await Promise.all(assetsPromises);
-  return assetsResponses;
+      return request;
+    });
+    const assetsResponses = await Promise.all(assetsPromises);
+    return assetsResponses;
+  } catch (e) {
+    throw new Error([e.message, `URL: ${e.config.url}`].join(' '));
+  }
 };
 
 const updateAssetsHtml = (state, $) => {

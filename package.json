@@ -21,6 +21,9 @@
   "bugs": {
     "url": "https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/issues"
   },
+  "jest": {
+    "setupFilesAfterEnv": ["jest-extended"]
+  },
   "homepage": "https://github.com/ArtemRakov/frontent-testing-react-project-lvl1#readme",
   "dependencies": {
     "axios": "^0.21.1",
@@ -43,6 +46,7 @@
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^27.0.3",
     "jest-cli": "^27.0.3",
+    "jest-extended": "^0.11.5",
     "nock": "^13.0.11"
   }
 }

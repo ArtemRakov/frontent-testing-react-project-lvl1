@@ -8,13 +8,19 @@ import createFiles from './createFiles.js';
 
 const log = debug('page-loader');
 
+const getPageData = async (url) => {
+  log('Fetch url', url);
+  try {
+    const response = await axios.get(url.href);
+    return response.data;
+  } catch (e) {
+    throw new Error([e.message, `URL: ${e.config.url}`].join(' '));
+  }
+};
+
 const pageLoader = async (u, outputDir = process.cwd()) => {
   const url = new URL(u);
-  log('Fetch url', url);
-  const response = await axios.get(url.href);
-  const html = response.data;
-
-  log('Load html');
+  const html = await getPageData(url);
   const $ = cheerio.load(html);
 
   const htmlAssets = extractAssetsFromHtml($);
