@@ -21,7 +21,9 @@
     "url": "https://github.com/ArtemRakov/frontent-testing-react-project-lvl1/issues"
   },
   "jest": {
-    "setupFilesAfterEnv": ["jest-extended"]
+    "setupFilesAfterEnv": [
+      "jest-extended"
+    ]
   },
   "homepage": "https://github.com/ArtemRakov/frontent-testing-react-project-lvl1#readme",
   "dependencies": {
@@ -43,6 +45,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jest": "^24.3.6",
+    "faker": "^5.5.3",
     "jest": "^27.0.3",
     "jest-cli": "^27.0.3",
     "jest-extended": "^0.11.5",

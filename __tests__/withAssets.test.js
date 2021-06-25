@@ -2,6 +2,7 @@ import nock from 'nock';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import faker from 'faker';
 import pathLoader from '../index.js';
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
@@ -63,18 +64,26 @@ describe('positive', () => {
 
 describe('negative', () => {
   test('unable to fetch url', async () => {
+    const errorCode = faker.datatype.number({
+      min: 400,
+      max: 599,
+    });
+
     nock(url.origin)
       .get(url.pathname)
-      .reply(404);
+      .reply(errorCode);
 
     await expect(pathLoader(url.href, outputDir)).rejects.toThrow('Request failed');
   });
 
   test('unable to fetch assets', async () => {
-    nock(url.origin)
-      .persist()
+    const scope = nock(url.origin);
+    scope
       .get(url.pathname)
-      .reply(200, initialHtml)
+      .reply(200, initialHtml);
+
+    scope
+      .persist()
       .get(/.*/)
       .reply(500);
 
@@ -82,10 +91,12 @@ describe('negative', () => {
   });
 
   test('file already exists', async () => {
-    nock(url.origin)
-      .persist()
+    const scope = nock(url.origin);
+    scope
       .get(url.pathname)
-      .reply(200, initialHtml)
+      .reply(200, initialHtml);
+
+    scope
       .get(/.*/)
       .reply(200, {});
 
