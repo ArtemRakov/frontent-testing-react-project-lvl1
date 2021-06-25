@@ -14,7 +14,7 @@ const getPageData = async (url) => {
     const response = await axios.get(url.href);
     return response.data;
   } catch (e) {
-    throw new Error([e.message, `Unable to load html: ${e.config.url}`].join(' '));
+    throw new Error(`Unable to load html: ${e.config.url} with error code: ${e.code}`);
   }
 };
 
