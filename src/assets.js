@@ -23,7 +23,7 @@ const loadAssets = async (sources) => {
   try {
     return await Promise.all(assetsPromises);
   } catch (e) {
-    throw new Error([e.message, `Unable to load assets on here: ${e.config.url}`].join(' '));
+    throw new Error([e.message, `Unable to load assets: ${e.config.url}`].join(' '));
   }
 };
 
