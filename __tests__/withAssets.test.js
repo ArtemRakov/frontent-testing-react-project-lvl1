@@ -97,6 +97,7 @@ describe('negative', () => {
       .reply(200, initialHtml);
 
     scope
+      .persist()
       .get(/.*/)
       .reply(200, {});
 
