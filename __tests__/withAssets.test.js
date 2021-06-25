@@ -73,7 +73,7 @@ describe('negative', () => {
       .get(url.pathname)
       .reply(errorCode);
 
-    await expect(pathLoader(url.href, outputDir)).rejects.toThrow('Request failed');
+    await expect(pathLoader(url.href, outputDir)).rejects.toThrow('Unable to load html');
   });
 
   test('unable to fetch assets', async () => {
@@ -87,7 +87,7 @@ describe('negative', () => {
       .get(/.*/)
       .reply(500);
 
-    await expect(pathLoader(url.href, outputDir)).rejects.toThrow('Request failed');
+    await expect(pathLoader(url.href, outputDir)).rejects.toThrow('Unable to load assets');
   });
 
   test('file already exists', async () => {

@@ -8,10 +8,19 @@ import createFiles from './createFiles.js';
 
 const log = debug('page-loader');
 
+const getPageData = async (url) => {
+  log('Fetch url', url);
+  try {
+    const response = await axios.get(url.href, { headers: { Accept: 'text/html' }, data: {} });
+    return response.data;
+  } catch (e) {
+    throw new Error([e.message, `Unable to load html page here: ${e.config.url}`].join(' '));
+  }
+};
+
 const pageLoader = async (u, outputDir = process.cwd()) => {
   const url = new URL(u);
-  const response = await axios.get(url.href, { headers: { Accept: 'text/html' }, data: {} });
-  const html = response.data;
+  const html = await getPageData(url);
   const $ = cheerio.load(html);
 
   const htmlAssets = extractAssetsFromHtml($);

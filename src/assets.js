@@ -20,7 +20,11 @@ const loadAssets = async (sources) => {
     return request;
   });
 
-  return Promise.all(assetsPromises);
+  try {
+    return await Promise.all(assetsPromises);
+  } catch (e) {
+    throw new Error([e.message, `Unable to load assets on here: ${e.config.url}`].join(' '));
+  }
 };
 
 const updateHtmlAssets = (state, $) => {

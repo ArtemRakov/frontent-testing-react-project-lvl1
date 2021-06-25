@@ -19,7 +19,11 @@ const createFiles = async (state, html) => {
       });
     });
 
-    await Promise.all(creationPromises);
+    try {
+      await Promise.all(creationPromises);
+    } catch (e) {
+      throw new Error([e.message, 'Unable to save assets to file'].join(' '));
+    }
   }
 
   fs.writeFileSync(state.htmlFilepath, html, { flag: 'wx' });
