@@ -11,7 +11,7 @@ const log = debug('page-loader');
 const getPageData = async (url) => {
   log('Fetch url', url);
   try {
-    const response = await axios.get(url.href, { headers: { Accept: 'text/html' }, data: {} });
+    const response = await axios.get(url.href);
     return response.data;
   } catch (e) {
     throw new Error([e.message, `Unable to load html page here: ${e.config.url}`].join(' '));
