@@ -11,6 +11,7 @@ const createTempDir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'path-loader-'
 
 let outputDir;
 let initialHtml;
+let outputFilePath;
 
 const url = new URL('https://ru.hexlet.io/courses');
 const htmlName = 'ru-hexlet-io-courses.html';
@@ -24,6 +25,7 @@ const assets = [
 beforeEach(() => {
   outputDir = createTempDir();
   initialHtml = readFile(htmlName);
+  outputFilePath = (filepath) => path.join(outputDir, filepath);
   nock.disableNetConnect();
 });
 
@@ -35,8 +37,6 @@ afterEach(() => {
 
 describe('positive', () => {
   test('loads html with assets', async () => {
-    const outputFilePath = (filepath) => path.join(outputDir, filepath);
-
     nock(url.origin)
       .get(url.pathname)
       .reply(200, initialHtml);
@@ -82,8 +82,6 @@ describe('negative', () => {
   });
 
   test('file already exists', async () => {
-    const outputFilePath = (filepath) => path.join(outputDir, filepath);
-
     nock(url.origin)
       .persist()
       .get(url.pathname)
