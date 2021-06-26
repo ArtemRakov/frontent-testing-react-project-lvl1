@@ -116,8 +116,8 @@ describe('complex', () => {
 
     scope
       .persist()
-      .get(/.*/)
-      .reply(200, {});
+      .get(/(assets|packs).*/)
+      .reply(200, {})
 
     fs.writeFileSync(outputFilePath(htmlName), '');
 
