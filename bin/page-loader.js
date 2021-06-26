@@ -13,9 +13,8 @@ program
     try {
       const info = await pageLoader(url, options.output);
       console.log(`Page was successfully downloaded into ${info.filepath}`);
-      process.exit();
     } catch (e) {
-      console.error(e);
+      console.error(e.message);
 
       process.exit(1);
     }

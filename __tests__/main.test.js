@@ -47,6 +47,7 @@ describe('simple', () => {
 describe('complex', () => {
   let outputFilePath;
   let initialHtml;
+  let scope;
 
   const url = new URL('https://ru.hexlet.io/courses');
   const htmlName = 'ru-hexlet-io-courses.html';
@@ -60,15 +61,16 @@ describe('complex', () => {
   beforeEach(() => {
     initialHtml = readFile(htmlName);
     outputFilePath = (filepath) => path.join(outputDir, filepath);
+    scope = nock(url.origin);
   });
 
   test('loads html with assets', async () => {
-    nock(url.origin)
+    scope
       .get(url.pathname)
       .reply(200, initialHtml);
 
     assets.forEach((asset) => {
-      nock(url.origin)
+      scope
         .get(asset.url)
         .replyWithFile(200, getFixturePath(`expected/${asset.path}`));
     });
@@ -87,7 +89,7 @@ describe('complex', () => {
   });
 
   test.each([404, 403, 500, 503])('unable to fetch url with status: %p', async (errorCode) => {
-    nock(url.origin)
+    scope
       .get(url.pathname)
       .reply(errorCode);
 
@@ -95,7 +97,6 @@ describe('complex', () => {
   });
 
   test('unable to fetch assets', async () => {
-    const scope = nock(url.origin);
     scope
       .get(url.pathname)
       .reply(200, initialHtml);
@@ -109,7 +110,6 @@ describe('complex', () => {
   });
 
   test('file already exists', async () => {
-    const scope = nock(url.origin);
     scope
       .get(url.pathname)
       .reply(200, initialHtml);
