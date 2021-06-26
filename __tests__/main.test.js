@@ -2,7 +2,6 @@ import nock from 'nock';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import faker from 'faker';
 import pathLoader from '../index.js';
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
@@ -11,32 +10,58 @@ const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8'
 const createTempDir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'path-loader-'));
 
 let outputDir;
-let initialHtml;
-let outputFilePath;
-
-const url = new URL('https://ru.hexlet.io/courses');
-const htmlName = 'ru-hexlet-io-courses.html';
-const assets = [
-  { url: '/assets/professions/nodejs.png', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png' },
-  { url: '/assets/application.css', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css' },
-  { url: '/packs/js/runtime.js', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js' },
-  { url: '/courses', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html' },
-];
 
 beforeEach(() => {
   outputDir = createTempDir();
-  initialHtml = readFile(htmlName);
-  outputFilePath = (filepath) => path.join(outputDir, filepath);
   nock.disableNetConnect();
 });
 
 afterEach(() => {
-  fs.rmSync(outputDir, { recursive: true, force: true });
   nock.cleanAll();
   nock.enableNetConnect();
 });
 
-describe('positive', () => {
+describe('simple', () => {
+  const url = new URL('http://example.com/test');
+
+  let outputFilePath;
+  let exampleHtml;
+
+  beforeEach(() => {
+    outputFilePath = path.join(outputDir, 'example-com-test.html');
+    exampleHtml = readFile('example-com-test.html');
+  });
+
+  test('loads html', async () => {
+    nock(url.origin)
+      .get(url.pathname)
+      .reply(200, exampleHtml);
+
+    await pathLoader(url.href, outputDir);
+
+    const outputFile = fs.readFileSync(outputFilePath, 'utf-8');
+    expect(outputFile).toEqual(exampleHtml);
+  });
+});
+
+describe('complex', () => {
+  let outputFilePath;
+  let initialHtml;
+
+  const url = new URL('https://ru.hexlet.io/courses');
+  const htmlName = 'ru-hexlet-io-courses.html';
+  const assets = [
+    { url: '/assets/professions/nodejs.png', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png' },
+    { url: '/assets/application.css', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css' },
+    { url: '/packs/js/runtime.js', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js' },
+    { url: '/courses', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html' },
+  ];
+
+  beforeEach(() => {
+    initialHtml = readFile(htmlName);
+    outputFilePath = (filepath) => path.join(outputDir, filepath);
+  });
+
   test('loads html with assets', async () => {
     nock(url.origin)
       .get(url.pathname)
@@ -60,15 +85,8 @@ describe('positive', () => {
       expect(output).toEqual(expected);
     });
   });
-});
 
-describe('negative', () => {
-  test('unable to fetch url', async () => {
-    const errorCode = faker.datatype.number({
-      min: 400,
-      max: 599,
-    });
-
+  test.each([404, 403, 500, 503])('unable to fetch url with status: %p', async (errorCode) => {
     nock(url.origin)
       .get(url.pathname)
       .reply(errorCode);
