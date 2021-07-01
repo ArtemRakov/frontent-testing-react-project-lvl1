@@ -21,64 +21,44 @@ afterEach(() => {
   nock.enableNetConnect();
 });
 
-describe('simple', () => {
-  const url = new URL('http://example.com/test');
-
-  let outputFilePath;
-  let exampleHtml;
-
-  beforeEach(() => {
-    outputFilePath = path.join(outputDir, 'example-com-test.html');
-    exampleHtml = readFile('example-com-test.html');
-  });
-
-  test('loads html', async () => {
-    nock(url.origin)
-      .get(url.pathname)
-      .reply(200, exampleHtml);
-
-    await pathLoader(url.href, outputDir);
-
-    const outputFile = fs.readFileSync(outputFilePath, 'utf-8');
-    expect(outputFile).toEqual(exampleHtml);
-  });
-});
-
-describe('complex', () => {
-  let outputFilePath;
-  let initialHtml;
-  let scope;
-
-  const url = new URL('https://ru.hexlet.io/courses');
-  const htmlName = 'ru-hexlet-io-courses.html';
-  const assets = [
-    { url: '/assets/professions/nodejs.png', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png' },
-    { url: '/assets/application.css', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css' },
-    { url: '/packs/js/runtime.js', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js' },
-    { url: '/courses', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html' },
+describe('positive:', () => {
+  const cases = [
+    { url: new URL('http://example.com/test'), html: 'example-com-test.html', assets: [] },
+    {
+      url: new URL('https://ru.hexlet.io/courses'),
+      html: 'ru-hexlet-io-courses.html',
+      assets: [
+        { url: '/assets/professions/nodejs.png', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png' },
+        { url: '/assets/application.css', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css' },
+        { url: '/packs/js/runtime.js', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js' },
+        { url: '/courses', path: 'ru-hexlet-io-courses_files/ru-hexlet-io-courses.html' },
+      ],
+    },
   ];
 
   beforeEach(() => {
-    initialHtml = readFile(htmlName);
-    outputFilePath = (filepath) => path.join(outputDir, filepath);
-    scope = nock(url.origin);
+    cases.forEach(({ url, html, assets }) => {
+      const scope = nock(url.origin);
+
+      scope
+        .get(url.pathname)
+        .replyWithFile(200, getFixturePath(html));
+
+      assets.forEach((asset) => {
+        scope
+          .get(asset.url)
+          .replyWithFile(200, getFixturePath(`expected/${asset.path}`));
+      });
+    });
   });
 
-  test('loads html with assets', async () => {
-    scope
-      .get(url.pathname)
-      .reply(200, initialHtml);
-
-    assets.forEach((asset) => {
-      scope
-        .get(asset.url)
-        .replyWithFile(200, getFixturePath(`expected/${asset.path}`));
-    });
+  test.each(cases)('loads html: $html', async ({ url, html, assets }) => {
+    const outputFilePath = (filepath) => path.join(outputDir, filepath);
 
     await pathLoader(url.href, outputDir);
 
-    const expectedHtml = readFile(`expected/${htmlName}`);
-    const outputHtml = fs.readFileSync(outputFilePath(htmlName), 'utf-8');
+    const expectedHtml = readFile(`expected/${html}`);
+    const outputHtml = fs.readFileSync(outputFilePath(html), 'utf-8');
     expect(outputHtml).toEqual(expectedHtml);
 
     assets.forEach((asset) => {
@@ -86,6 +66,20 @@ describe('complex', () => {
       const output = fs.readFileSync(outputFilePath(asset.path), 'utf-8');
       expect(output).toEqual(expected);
     });
+  });
+});
+
+describe('negative:', () => {
+  let url;
+  let scope;
+  let html;
+  let outputFilePath;
+
+  beforeEach(() => {
+    url = new URL('https://ru.hexlet.io/courses');
+    scope = nock(url.origin);
+    html = 'ru-hexlet-io-courses.html';
+    outputFilePath = (filepath) => path.join(outputDir, filepath);
   });
 
   test.each([404, 403, 500, 503])('unable to fetch url with status: %p', async (errorCode) => {
@@ -99,11 +93,11 @@ describe('complex', () => {
   test('unable to fetch assets', async () => {
     scope
       .get(url.pathname)
-      .reply(200, initialHtml);
+      .replyWithFile(200, getFixturePath(html));
 
     scope
       .persist()
-      .get(/.*/)
+      .get(/(assets|packs).*/)
       .reply(500);
 
     await expect(pathLoader(url.href, outputDir)).rejects.toThrow('Unable to load assets');
@@ -112,15 +106,31 @@ describe('complex', () => {
   test('file already exists', async () => {
     scope
       .get(url.pathname)
-      .reply(200, initialHtml);
+      .replyWithFile(200, getFixturePath(html));
 
     scope
       .persist()
       .get(/(assets|packs).*/)
       .reply(200, {});
 
-    fs.writeFileSync(outputFilePath(htmlName), '');
+    fs.writeFileSync(outputFilePath(html), '');
 
     await expect(pathLoader(url.href, outputDir)).rejects.toThrow('file already exists');
+  });
+
+  test('dont have write permission', async () => {
+    scope
+      .get(url.pathname)
+      .replyWithFile(200, getFixturePath(html));
+
+    scope
+      .persist()
+      .get(/(assets|packs).*/)
+      .reply(200, {});
+
+    const myDirPath = path.join(outputDir, 'no_write_permission');
+    fs.mkdirSync(myDirPath, { mode: 0o000 });
+
+    await expect(pathLoader(url.href, myDirPath)).rejects.toThrow('yo');
   });
 });
