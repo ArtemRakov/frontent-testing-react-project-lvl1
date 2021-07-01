@@ -131,6 +131,6 @@ describe('negative:', () => {
     const myDirPath = path.join(outputDir, 'no_write_permission');
     fs.mkdirSync(myDirPath, { mode: 0o000 });
 
-    await expect(pathLoader(url.href, myDirPath)).rejects.toThrow('yo');
+    await expect(pathLoader(url.href, myDirPath)).rejects.toThrow('permission denied');
   });
 });
