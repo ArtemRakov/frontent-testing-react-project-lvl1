@@ -134,6 +134,7 @@ describe('negative:', () => {
 
     const ls = spawnSync('whoami', { encoding: 'utf8' });
     console.log('whoami', ls.stdout);
+    expect(ls.stdout, 'yo');
 
     await expect(pathLoader(url.href, myDirPath)).rejects.toThrow('permission denied');
   });
