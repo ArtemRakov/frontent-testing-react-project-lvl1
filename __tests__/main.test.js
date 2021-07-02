@@ -3,6 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import pathLoader from '../index.js';
+const { spawn } = require('child_process');
+const ls = spawn('whoami')
+
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
@@ -14,6 +17,9 @@ let outputDir;
 beforeEach(() => {
   outputDir = createTempDir();
   nock.disableNetConnect();
+  ls.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
 });
 
 afterEach(() => {
