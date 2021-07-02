@@ -128,9 +128,6 @@ describe('negative:', () => {
       .get(/(assets|packs).*/)
       .reply(200, {});
 
-    const myDirPath = path.join(outputDir, 'no_write_permission');
-    fs.mkdirSync(myDirPath, { mode: 0o000 });
-
-    await expect(pathLoader(url.href, myDirPath)).rejects.toThrow('permission denied');
+    await expect(pathLoader(url.href, '/sys')).rejects.toThrow('operation not permitted');
   });
 });
