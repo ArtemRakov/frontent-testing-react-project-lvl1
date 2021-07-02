@@ -118,7 +118,7 @@ describe('negative:', () => {
     await expect(pathLoader(url.href, outputDir)).rejects.toThrow('file already exists');
   });
 
-  test('dont have write permission', async () => {
+  test('non existing path', async () => {
     scope
       .get(url.pathname)
       .replyWithFile(200, getFixturePath(html));
@@ -129,5 +129,18 @@ describe('negative:', () => {
       .reply(200, {});
 
     await expect(pathLoader(url.href, '/not_existing_path')).rejects.toThrow('Operation not allowed');
+  });
+
+  test('dont have write permission', async () => {
+    scope
+      .get(url.pathname)
+      .replyWithFile(200, getFixturePath(html));
+
+    scope
+      .persist()
+      .get(/(assets|packs).*/)
+      .reply(200, {});
+
+    await expect(pathLoader(url.href, '/sys')).rejects.toThrow();
   });
 });
