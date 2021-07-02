@@ -17,9 +17,6 @@ let outputDir;
 beforeEach(() => {
   outputDir = createTempDir();
   nock.disableNetConnect();
-  ls.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
 });
 
 afterEach(() => {
@@ -136,6 +133,11 @@ describe('negative:', () => {
 
     const myDirPath = path.join(outputDir, 'no_write_permission');
     fs.mkdirSync(myDirPath, { mode: 0o000 });
+
+    ls.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+
 
     await expect(pathLoader(url.href, myDirPath)).rejects.toThrow('permission denied');
   });
