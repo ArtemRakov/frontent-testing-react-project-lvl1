@@ -3,9 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import pathLoader from '../index.js';
-const { spawn } = require('child_process');
-const ls = spawn('whoami')
-
+import { spawnSync } from'child_process';
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
@@ -134,10 +132,8 @@ describe('negative:', () => {
     const myDirPath = path.join(outputDir, 'no_write_permission');
     fs.mkdirSync(myDirPath, { mode: 0o000 });
 
-    ls.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-      });
-
+    const ls = spawnSync('whoami', { encoding: 'utf8' })
+    console.log(ls.stdout)
 
     await expect(pathLoader(url.href, myDirPath)).rejects.toThrow('permission denied');
   });
