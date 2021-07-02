@@ -2,7 +2,6 @@ import nock from 'nock';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import { spawnSync } from 'child_process';
 import pathLoader from '../index.js';
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
@@ -131,10 +130,6 @@ describe('negative:', () => {
 
     const myDirPath = path.join(outputDir, 'no_write_permission');
     fs.mkdirSync(myDirPath, { mode: 0o000 });
-
-    const ls = spawnSync('whoami', { encoding: 'utf8' });
-    console.log('whoami', ls.stdout);
-    expect(ls.stdout).toBe('yo');
 
     await expect(pathLoader(url.href, myDirPath)).rejects.toThrow('permission denied');
   });
