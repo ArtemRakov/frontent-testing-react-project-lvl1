@@ -128,6 +128,6 @@ describe('negative:', () => {
       .get(/(assets|packs).*/)
       .reply(200, {});
 
-    await expect(pathLoader(url.href, '/sys')).rejects.toThrow('operation not permitted');
+    await expect(pathLoader(url.href, '/not_existing_path')).rejects.toThrow('Operation not allowed');
   });
 });

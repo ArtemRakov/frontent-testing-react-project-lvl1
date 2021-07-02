@@ -1,6 +1,14 @@
 import fs from 'fs';
 import { loadAssets } from './assets.js';
 
+const checkAccess = (filepath) => {
+  try {
+    fs.accessSync(filepath);
+  } catch (e) {
+    throw new Error('Operation not allowed');
+  }
+};
+
 const createFiles = async (state, html) => {
   if (state.assets.length > 0) {
     fs.mkdirSync(state.assetsDirPath);
@@ -19,14 +27,10 @@ const createFiles = async (state, html) => {
       });
     });
 
-    try {
-      await Promise.all(creationPromises);
-    } catch (e) {
-      throw new Error([e.message, 'Unable to save assets to file'].join(' '));
-    }
+    await Promise.all(creationPromises);
   }
 
   fs.writeFileSync(state.htmlFilepath, html, { flag: 'wx' });
 };
 
-export default createFiles;
+export { createFiles, checkAccess };

@@ -4,7 +4,7 @@ import debug from 'debug';
 
 import buildState from './state.js';
 import { extractAssetsFromHtml, updateHtmlAssets } from './assets.js';
-import createFiles from './createFiles.js';
+import { checkAccess, createFiles } from './files.js';
 
 const log = debug('page-loader');
 
@@ -19,6 +19,8 @@ const getPageData = async (url) => {
 };
 
 const pageLoader = async (u, outputDir = process.cwd()) => {
+  checkAccess(outputDir);
+
   const url = new URL(u);
   const html = await getPageData(url);
   const $ = cheerio.load(html);
